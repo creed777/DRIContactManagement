@@ -1,0 +1,250 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@Html.AntiForgeryToken()
+
+<!DOCTYPE html>
+
+<style>
+    .input {
+        width: fit-content;
+        color: black;
+    }
+
+    #serviceId {
+        border: none;
+    }
+
+/*     .th-sort {
+        display: flex;
+        justify-content: space-between;
+    } */
+
+    .container {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+        max-width: 100%;
+    }
+
+    .radio-button{
+        margin-right: 20px;
+    }
+
+    .dropdownlist {
+        max-width: 200px !important;
+        margin-right: 20px;
+    }
+
+    .material-symbols-outlined {
+        margin-right: 20px;
+    }
+
+    .filter-row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 10px;
+    }
+
+    .default-option {
+        color: lightgray;
+    }
+
+    .reverse-image {
+        color: red;
+        -webkit-transform: scaleY(-1);
+        transform: scaleY(-1);
+    }
+
+    .flag-hidden {
+        display: none
+    }
+
+    .modal-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    hr {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    serviceId {
+        width: fit-content;
+    
+    }
+
+    .flag{
+        color:red;
+        margin-right:0px !important;
+    }
+
+    .service-id{
+        width:400px;
+    }
+
+    .check-all-btn{
+        font-size:12px;
+        width:60px;
+        height:25px;
+    }
+</style>
+
+<div class="filter-row">
+@*     <span class="material-symbols-outlined">
+        filter_list
+    </span> *@
+    <span style="display:flex; flex-direction:column"> 
+     <span>
+        <input type="radio" id="flagged" name="flaggedrow" value=true />
+        <label for="flagged" class="radio-button">Flagged</label>
+    </span>
+    <span>
+        <input type="radio" id="flagged" name="flaggedrow" value=false />
+        <label for="flagged" class="radio-button">Unflagged</label>
+    </span>
+    </span>
+    <select class="dropdownlist" id="organization">
+        <option class="default-option" value="" selected>Organization</option>
+    </select>
+    <select class="dropdownlist" id="serviceGroup">
+        <option class="default-option" value="" selected>Service Group</option>
+    </select>
+    <select class="dropdownlist" id="serviceTeam">
+        <option class="default-option" value="" selected>Service Team</option>
+    </select>
+    <select class="dropdownlist" id="driName">
+        <option class="default-option" value="" selected>DRI Name</option>
+    </select>
+    <select class="dropdownlist" id="delegateName">
+        <option class="default-option" value="" selected>Delegate Name</option>
+    </select>
+</div>
+<table id="tblDRIList" class="table table-sm table-bordered w-auto">
+    <thead>
+        <tr>
+            <th class="th-sort">
+                <button id="btnCheckAll" type="button" class="check-all-btn">Check</button>
+            </th>
+            <th>
+                <span class="th-sort">
+                    ServiceId
+                </span>
+            </th>
+            <th>
+                <span class="th-sort">
+                    ServiceName
+                </span>
+            </th>
+            <th>
+                <span class="th-sort">
+                    Organization
+                </span>
+
+            </th>
+            <th>
+                <span class="th-sort">
+                    Service Group
+                </span>
+            </th>
+            <th>
+                <span class="th-sort">
+                    Service Team
+                </span>
+            </th>
+            <th>
+                <span class="th-sort">
+                    DRI Name
+                </span>
+            </th>
+            <th>
+                <span class="th-sort">
+                    DRI Email
+                </span>
+            </th>
+            <th>
+                <span class="th-sort">
+                    Delegate Name
+                </span>
+            </th>
+            <th>
+                <span class="th-sort">
+                    Delegate Email
+                </span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (Model.ServiceContacts != null)
+            {
+                foreach (var item in Model.ServiceContacts!)
+                {
+                    <tr>
+                        <td><input type="checkbox" class="checkbox" /></td>
+                        <td class="service-id" style="min-width:350px">
+                            <span class="flag material-symbols-outlined flag-hidden">
+                            flag
+                            </span>                            
+                            <span class="serviceId">
+                            @item.ServiceId 
+                            </span>
+                        </td>
+                        <td class="service-name">@item.ServiceName</td>
+                        <td class="org-name">@item.OrganizationName</td>
+                        <td class="serv-grp-name">@item.ServiceGroupName </td>
+                        <td class="serv-team-name">@item.TeamGroupName</td>
+                        <td><span class="dri-name">@item.DRIName</span></td>
+                        <td><span class="dri-email">@item.DRIEmail</span></td>
+                        <td><span class="delegate-name">@item.DelegateName</span></td>
+                        <td><span class="delegate-email">@item.DelegateEmail</span></td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+
+<div>
+    <button id="btnEdit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDialog" disabled=disabled> Edit </button>
+    <button id="btnSaveChecked" type="button" class="btn btn-primary" disabled=disabled> Save </button>
+</div>
+
+<div id="editDialog" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Contacts</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label for="newDriName">DRI Name: </label>
+                <input id="newDriName" name="DRIName" type="text" />
+                <label for="newDriEmail">DRI Email: </label>
+                <input id="newDriEmail" name="DRIEmail" type="text" />
+                <hr />
+                <label for="newDelegateName">Delegate Name: </label>
+                <input id="newDelegateName" name="DelegateName" value="" type="text" />
+                <label for="newDelgateEmail">Delegate Email: </label>
+                <input id="newDelegateEmail" name="DelegateEmail" value="" type="text" />
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="spinnerDialog" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
